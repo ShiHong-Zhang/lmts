@@ -1,0 +1,37 @@
+--
+-- This is the main control file
+--
+
+con.station = "fft"
+
+----------------------------------------------------
+-- FFT
+----------------------------------------------------
+
+con.FLOW = {
+--	"scanpsn",
+--	"scanmbsn",
+	"ckrom",
+--	"burnmac",
+	"lan",
+	"wifi",
+	"ckpmon",
+	"ckec",
+
+	"audio",
+	"keyboard",
+	"touchpad",
+	"webcam",
+	"vgaout",
+	"lcdwave",
+	"battery",
+--	"lid",
+
+	"cpu_memcap",
+	"usb",
+	"fanstem",
+--	"led",
+	"cmos",
+	"ckntp",
+	"upload",
+}

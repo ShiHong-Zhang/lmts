@@ -1,0 +1,38 @@
+--
+-- This is the main control file
+--
+
+con.station = "smt"
+
+----------------------------------------------------
+-- SMT
+----------------------------------------------------
+
+con.FLOW = {
+	"scanpsn",
+	"scanmbsn",
+	"ckrom",
+	"burnmac",
+	"lan",
+	"wifi",
+	"ckpmon",
+	"ckec",
+
+	"audio",
+	"keyboard",
+	"touchpad",
+	"webcam",
+	"battery",
+	"vgaout",
+	"lcdwave",
+--	"lid",
+
+	"cpu_memcap",
+	"sdcard",
+	"usb",
+	"fanstem",
+--	"led",
+	"cmos",
+	"ntp",
+	"upload",
+}

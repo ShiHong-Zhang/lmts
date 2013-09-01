@@ -1,0 +1,38 @@
+--
+-- This is the main control file
+--
+
+
+con.station = "fat"
+----------------------------------------------------
+-- FAT
+----------------------------------------------------
+
+con.FLOW = {
+--	"scanpsn",
+--	"scanmbsn",
+	"ckrom",
+--	"burnmac",
+	"lan",
+	"wifi",
+	"ckpmon",
+	"ckec",
+
+	"audio",
+	"keyboard",
+	"touchpad",
+	"webcam",
+	"vgaout",
+	"lcdwave",
+	"battery",
+--	"lid",
+
+	"cpu_memcap",
+	"sdcard",
+	"usb",
+	"fanstem",
+--	"led",
+	"cmos",
+	"ntp",
+	"upload",
+}

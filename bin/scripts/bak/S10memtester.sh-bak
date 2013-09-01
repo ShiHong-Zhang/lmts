@@ -1,0 +1,145 @@
+#!/bin/bash
+
+setterm -blank 0
+echo "memtest start......."
+#sleep 10
+
+if [ -f "/root/logs/prememtester_failed" ]; then
+        echo	
+        echo "==================================================== "
+        echo 
+        echo "########    ###    #### ##       ######## ########  "
+        echo "##         ## ##    ##  ##       ##       ##     ## "
+        echo "##        ##   ##   ##  ##       ##       ##     ## "
+        echo "######   ##     ##  ##  ##       ######   ##     ## "
+        echo "##       #########  ##  ##       ##       ##     ## "
+        echo "##       ##     ##  ##  ##       ##       ##     ## "
+        echo "##       ##     ## #### ######## ######## ########  "
+        echo
+        echo "==================================================== "
+        echo
+        echo "Error reason: Memory data comparison failed."
+        echo 
+        cat /root/logs/prememtester-log.txt
+        echo
+        echo "Please press ENTER key to continue..."
+        echo
+
+        sleep 100000000000000000000000                                                                                                                                                                                                                                                                                                                                
+        read -n 1 
+                
+fi
+
+get_logs(){
+	        echo "-----------------kickerrc-----------------" >> /root/logs/memtester_log/burnin_kickerrc.txt
+		echo $1 >> /root/logs/memtester_log/burnin_kickerrc.txt
+		cat /home/yee/.kde/share/config/kickerrc >> /root/logs/memtester_log/burnin_kickerrc.txt
+		echo "">> /root/logs/memtester_log/burnin_kickerrc.txt
+
+		echo "-----------------dmesg-----------------" >> /root/logs/memtester_log/burnin_dmesg.txt
+		echo $1 >> /root/logs/memtester_log/burnin_dmesg.txt
+		dmesg >> /root/logs/memtester_log/burnin_dmesg.txt
+		echo "">> /root/logs/memtester_log/burnin_dmesg.txt
+
+		echo "-----------------xsession-----------------" >>/root/logs/memtester_log/burnin_xsession.txt
+		echo $1 >> /root/logs/memtester_log/burnin_xsession.txt
+		cat /home/yee/.xsession-errors >> /root/logs/memtester_log/burnin_xsession.txt
+		echo "" >> /root/logs/memtester_log/burnin_xsession.txt
+
+		echo "-----------------xorg-----------------" >>/root/logs/memtester_log/burnin_xorg_log.txt
+		echo $1 >> /root/logs/memtester_log/burnin_xorg_log.txt					
+		cat /var/log/Xorg.0.log >> /root/logs/memtester_log/burnin_xorg_log.txt        
+		echo "" >> /root/logs/memtester_log/burnin_xorg_log.txt
+
+	}
+
+
+memtester="/root/lemote_line/tools/ime_memtester/memtester"
+meminfo=`cat /proc/meminfo | head -n 1 | awk '{print $2 }'`
+
+if [ ! -f "$memtester" ]; then
+
+	echo "$memtester not found." >> /root/logs/prememtester-log.txt
+        echo "Error time:" `date` >> /root/logs/prememtester-log.txt
+	touch /root/logs/prememtester_failed
+
+	echo "$memtester not found."
+        echo
+        echo "Please press ENTER key to continue..."
+        echo
+	read -n 1
+	exit 1
+else
+	echo "$memtester"
+	if [ $(((1024-50)*1024)) -lt $meminfo ] && [ $(((1024+50)*1024)) -gt $meminfo ]; then
+		echo -e "Start\t: `date +"%y-%m-%d %H:%M:%S"`\t$memtester 900 2 2" |tee /root/logs/prememtester-log.txt
+		$memtester 900 2 2>>/root/logs/prememtester-log.txt
+	elif [ $(((512-50)*1024)) -lt $meminfo ] && [ $(((512+50)*1024)) -gt $meminfo ]; then
+		echo -e "Start: `date +"%y-%m-%d %H:%M:%S"`\t$memtester 450 2 2" |tee /root/logs/prememtester-log.txt
+		$memtester 450 2 2>>/root/logs/prememtester-log.txt
+	fi
+fi	
+
+ret=$?
+if [ $ret -eq "0" ]; then
+        touch /root/logs/prememtester_pass
+		echo -e "End\t: `date +"%y-%m-%d %H:%M:%S"`" >>/root/logs/prememtester-log.txt
+        # show pass
+
+        echo
+        echo
+        echo "================================================ "
+        echo ""
+        echo "        ########      ###      ######    ######  "
+        echo "        ##     ##    ## ##    ##    ##  ##    ## "
+        echo "        ##     ##   ##   ##   ##        ##       "
+        echo "        ########   ##     ##   ######    ######  "
+        echo "        ##         #########        ##        ## "
+        echo "        ##         ##     ##  ##    ##  ##    ## "
+        echo "        ##         ##     ##   ######    ######  "
+        echo ""
+        echo "================================================ "
+        echo
+        echo "Please wait for 3 seconds ..."
+        echo
+        
+        sleep 3
+        
+        rm -f /etc/rc2.d/S10memtester.sh
+        
+else
+        # show Failed
+        touch /root/logs/prememtester_failed
+        
+        echo "Error reason: Memory data comparison failed." >> /root/logs/prememtester-log.txt
+        echo "Error time:" `date` >> /root/logs/prememtester-log.txt
+        echo
+        echo	
+        echo "==================================================== "
+        echo 
+        echo "########    ###    #### ##       ######## ########  "
+        echo "##         ## ##    ##  ##       ##       ##     ## "
+        echo "##        ##   ##   ##  ##       ##       ##     ## "
+        echo "######   ##     ##  ##  ##       ######   ##     ## "
+        echo "##       #########  ##  ##       ##       ##     ## "
+        echo "##       ##     ##  ##  ##       ##       ##     ## "
+        echo "##       ##     ## #### ######## ######## ########  "
+        echo
+        echo "==================================================== "
+        echo
+        echo "Error reason: Memory data comparison failed."
+        echo
+        echo "Please press ENTER key to continue..."
+        echo
+
+        sleep 100000000000000000000000                                                                                                                                                                                                                                                                                                                                
+        read -n 1 
+fi
+
+if [ ! -d "/root/logs/memtester_log" ]; then
+                sudo mkdir /root/logs/memtester_log
+	get_logs memtester
+fi
+					
+exit 0
+

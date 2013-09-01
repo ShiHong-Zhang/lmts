@@ -1,0 +1,70 @@
+#!/bin/bash -e
+getchar(){
+	stty cbreak -echo
+	dd if=/dev/tty bs=1 count=1 2>/dev/null
+	stty -cbreak echo
+}
+
+clear
+
+tput cup 11 30
+printf "==================================="
+tput cup 12 31
+printf " 请输入您的密码:"
+for ((i=12;i<18;i++)); do
+	tput cup $i 30
+	printf "="
+done
+tput cup 18 30
+printf "==================================="
+
+for ((i=12;i<18;i++)); do
+	tput cup $i 64
+	printf "="
+done
+tput cup 15 35
+
+
+flag=0
+until [ $flag -eq 1 ]
+do
+	while : 
+	do
+		ret=`getchar`
+		if [ x$ret == x ];then
+			echo
+			break
+		fi
+		str="$str$ret"
+		printf "*"
+	done
+
+	if [ "$str"x == "dev"x ];then
+		flag=1
+		echo "ok"	
+		echo $str > /root/logs/tester.txt
+	elif [ "$str"x == "mali"x ];then
+		flag=1
+		echo "ok"	
+		echo $str > /root/logs/tester.txt
+	elif [ "$str"x == "86"x ];then
+		flag=1
+		echo "ok"
+		echo $str > /root/logs/tester.txt
+	elif [ "$str"x == "g100"x ];then
+		flag=1
+		echo "ok"
+		echo $str > /root/logs/tester.txt
+	elif [ "$str"x == "7891"x ];then
+		flag=1
+		echo "ok"
+		echo $str > /root/logs/tester.txt
+	else
+		tput cup 15 35
+		echo "您输入的密码错误"
+		clear
+	fi
+#echo $str > /root/logs/tester.txt
+
+done
+
